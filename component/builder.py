@@ -64,9 +64,6 @@ class ComponentBuilder(models.AbstractModel):
         # the graph, so we can load the components following the order
         # of the addons' dependencies
 
-        graph = ModuleGraph(self.env.cr)
-        graph.extend(["base"])
-
         query = "SELECT name FROM ir_module_module WHERE state IN %s "
         params = [tuple(states)]
         if exclude_addons:
@@ -74,7 +71,7 @@ class ComponentBuilder(models.AbstractModel):
             params.append(tuple(exclude_addons))
         self.env.cr.execute(query, params)
 
-        module_list = [name for (name,) in self.env.cr.fetchall() if name not in graph]
+        module_list = [name for (name,) in self.env.cr.fetchall()]
         graph = ModuleGraph(self.env.cr)
         graph.extend(module_list)
 
